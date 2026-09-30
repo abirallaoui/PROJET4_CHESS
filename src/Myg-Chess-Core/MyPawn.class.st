@@ -20,9 +20,29 @@ MyPawn >> renderPieceOn: aSquare [
 { #category : 'rendering' }
 MyPawn >> targetSquaresLegal: aBoolean [
 
-	^ (self isWhite
-		   ifTrue: [ { square up } ]
-		   ifFalse: [ { square down } ]) select: [ :s |
-		  s notNil and: [
-			  s hasPiece not or: [ s contents color ~= color ] ] ]
+	| forward candidates startRank |
+	forward := self isWhite
+		ifTrue: [ square up ]
+		ifFalse: [ square down ].
+	candidates := OrderedCollection new.
+
+	(forward notNil and: [ forward hasPiece not ]) ifTrue: [
+		candidates add: forward.
+		startRank := self isWhite ifTrue: [ $2 ] ifFalse: [ $7 ].
+		(square file = startRank) ifTrue: [
+			| forward2 |
+			forward2 := self isWhite
+				ifTrue: [ forward up ]
+				ifFalse: [ forward down ].
+			(forward2 notNil and: [ forward2 hasPiece not ])
+				ifTrue: [ candidates add: forward2 ] ] ].
+
+	({ forward } collect: [ :f | f ifNotNil: [ f left ] ]),
+	({ forward } collect: [ :f | f ifNotNil: [ f right ] ])
+		do: [ :diag |
+			(diag notNil and: [
+				diag hasPiece and: [ diag contents color ~= color ] ])
+				ifTrue: [ candidates add: diag ] ].
+
+	^ candidates asArray
 ]
