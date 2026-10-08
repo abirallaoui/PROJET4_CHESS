@@ -90,9 +90,12 @@ MyFENParser >> parseAnyOf: options [
 { #category : 'parsing' }
 MyFENParser >> parseCastlingAbility [
 
-	self peek = $- ifTrue: [ ^ 'NO CASTLING' ].
-
-	^ (1 to: 4) collect: [ :i | self parseAnyOf: #( $k $K $q $Q ) ]
+	self peek = $- ifTrue: [
+		stream next.
+		^ 'NO CASTLING' ].
+	^ String streamContents: [ :s |
+		  [ self peek notNil and: [ self peek ~= $  ] ] whileTrue: [
+			  s nextPut: (self parseAnyOf: #( $k $K $q $Q )) ] ]
 ]
 
 { #category : 'parsing' }
@@ -125,16 +128,12 @@ MyFENParser >> parsePiece [
 MyFENParser >> parseRank [
 
 	| rank |
-	self peek = $8 ifTrue: [
-		stream next.
-		^ (1 to: 8) collect: [ :i | 'empty' ] ].
-
 	rank := OrderedCollection new.
 	[ self peek notNil and: [ (#( $  $/ ) includes: self peek) not ] ]
 		whileTrue: [
-			rank add: (self peek isDigit
-					 ifTrue: [ stream next ]
-					 ifFalse: [ self parsePiece ]) ].
+			self peek isDigit
+				ifTrue: [ stream next digitValue timesRepeat: [ rank add: 'empty' ] ]
+				ifFalse: [ rank add: self parsePiece ] ].
 	^ rank
 ]
 
@@ -168,7 +167,7 @@ MyFENParser >> parseSquare [
 
 	^ {
 		  (self parseAnyOf: ($a to: $h)).
-		  (self parseAnyOf: (3 to: 6)) }
+		  (self parseAnyOf: ($3 to: $6)) }
 ]
 
 { #category : 'parsing' }
