@@ -28,7 +28,7 @@ MyPiece class >> white [
 { #category : 'as yet unclassified' }
 MyPiece >> attackingSquares [
 
-	^ self legalTargetSquares
+	^ self targetSquaresLegal: true
 ]
 
 { #category : 'path commands' }
@@ -158,7 +158,8 @@ MyPiece >> leftFileLegal: aBoolean [
 { #category : 'path commands' }
 MyPiece >> legalTargetSquares [
 
-	^ self targetSquaresLegal: true
+	^ (self targetSquaresLegal: true) select: [ :aSquare |
+		  self wouldLeaveMyKingSafeIfMovingTo: aSquare ]
 ]
 
 { #category : 'path commands' }
@@ -169,6 +170,14 @@ MyPiece >> moveTo: aSquare [
 	square emptyContents.
 	square := aSquare.
 	aSquare contents: self
+]
+
+{ #category : 'as yet unclassified' }
+MyPiece >> myKing [
+
+	^ self board pieces
+		  detect: [ :p | p notNil and: [ p isKing and: [ p color = color ] ] ]
+		  ifNone: [ nil ]
 ]
 
 { #category : 'rendering' }
@@ -242,4 +251,25 @@ MyPiece >> upRightDiagonalLegal: aBoolean [
 	^ self
 		  collectSquares: [ :aSquare | aSquare up ifNotNil: #right ]
 		  legal: aBoolean
+]
+
+{ #category : 'as yet unclassified' }
+MyPiece >> wouldLeaveMyKingSafeIfMovingTo: aSquare [
+
+	| originalSquare capturedPiece kingSafe king |
+	originalSquare := square.
+	capturedPiece := aSquare contents.
+
+	originalSquare contents: nil.
+	aSquare contents: self.
+	square := aSquare.
+
+	king := self myKing.
+	kingSafe := king isNil or: [ king isInCheck not ].
+
+	square := originalSquare.
+	originalSquare contents: self.
+	aSquare contents: capturedPiece.
+
+	^ kingSafe
 ]
