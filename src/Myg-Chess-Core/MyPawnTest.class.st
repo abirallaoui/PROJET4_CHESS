@@ -28,7 +28,7 @@ MyPawnTest >> testBlackPawnCanCaptureDiagonally [
 	board at: 'd7' put: blackPawn.
 	board at: 'e6' put: whitePawn.
 
-	self assert: (blackPawn legalTargetSquares includes: (board at: 'e6' ifAbsent: [ nil ]))
+	self assert: (blackPawn legalTargetSquares includes: (board at: 'e6' ))
 ]
 
 { #category : 'tests' }
@@ -39,7 +39,7 @@ MyPawnTest >> testBlackPawnCannotMoveDiagonallyToEmptySquare [
 	blackPawn := MyPawn black.
 	board at: 'd7' put: blackPawn.
 
-	self assert: (blackPawn legalTargetSquares includes: (board at: 'e6' ifAbsent: [ nil ])) not
+	self assert: (blackPawn legalTargetSquares includes: (board at: 'e6' )) not
 ]
 
 { #category : 'tests' }
@@ -47,7 +47,7 @@ MyPawnTest >> testBlackPawnHasTwoMovesAtStart [
 
 	| game pawn |
 	game := MyChessGame freshGame.
-	pawn := (game board at: 'd7' ifAbsent: [ nil ]) contents.
+	pawn := (game board at: 'd7' ) contents.
 
 	self assert: pawn legalTargetSquares size equals: 2
 ]
@@ -60,7 +60,7 @@ MyPawnTest >> testBlackPawnLosesDoubleStepAfterMoving [
 	blackPawn := MyPawn black.
 	board at: 'd7' put: blackPawn.
 
-	targetSquare := board at: 'd6' ifAbsent: [ nil ].
+	targetSquare := board at: 'd6' .
 	blackPawn moveTo: targetSquare.
 
 	self assert: blackPawn legalTargetSquares size equals: 1
@@ -89,7 +89,7 @@ MyPawnTest >> testWhitePawnCanCaptureDiagonally [
 	board at: 'd2' put: whitePawn.
 	board at: 'e3' put: blackPawn.
 
-	self assert: (whitePawn legalTargetSquares includes: (board at: 'e3' ifAbsent: [ nil ]))
+	self assert: (whitePawn legalTargetSquares includes: (board at: 'e3'))
 ]
 
 { #category : 'tests' }
@@ -100,7 +100,7 @@ MyPawnTest >> testWhitePawnCannotMoveDiagonallyToEmptySquare [
 	whitePawn := MyPawn white.
 	board at: 'd2' put: whitePawn.
 
-	self assert: (whitePawn legalTargetSquares includes: (board at: 'e3' ifAbsent: [ nil ])) not
+	self assert: (whitePawn legalTargetSquares includes: (board at: 'e3' )) not
 ]
 
 { #category : 'tests' }
@@ -109,7 +109,7 @@ MyPawnTest >> testWhitePawnHasTwoMovesAtStart [
 	| game board pawn |
 	game := MyChessGame freshGame.
 	board := game board.
-	pawn := (board at: 'd2' ifAbsent: [ nil ]) contents.
+	pawn := (board at: 'd2' ) contents.
 
 	self assert: pawn legalTargetSquares size equals: 2
 ]
@@ -122,7 +122,7 @@ MyPawnTest >> testWhitePawnLosesDoubleStepAfterMoving [
 	whitePawn := MyPawn white.
 	board at: 'd2' put: whitePawn.
 
-	targetSquare := board at: 'd3' ifAbsent: [ nil ].
+	targetSquare := board at: 'd3' .
 	whitePawn moveTo: targetSquare.
 
 	self assert: whitePawn legalTargetSquares size equals: 1

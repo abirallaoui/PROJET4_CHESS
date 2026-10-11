@@ -37,7 +37,7 @@ MyChessBoard class >> new [
 { #category : 'accessing' }
 MyChessBoard >> at: coordinate [
 
-	^ grid at: coordinate ifAbsent: nil
+	^ grid at: coordinate ifAbsent: [ MyOutOfBoardSquare new ]
 ]
 
 { #category : 'accessing' }
@@ -88,7 +88,7 @@ MyChessBoard >> game: aGame [
 { #category : 'highlighting' }
 MyChessBoard >> highLightTargets: squares [
 
-	squares do: [ :sq | sq ifNotNil: #highlightTarget ]
+	squares do: [ :sq | sq highlightTarget ]
 ]
 
 { #category : 'initialization' }
@@ -201,7 +201,7 @@ MyChessBoard >> initializeSquares [
 						          color: Color black;
 						          board: self;
 						          initialize;
-						          contents: nil;
+						          emptyContents;
 						          yourself ]
 				          ifFalse: [
 					          black := true.
@@ -209,7 +209,7 @@ MyChessBoard >> initializeSquares [
 						          color: Color white;
 						          board: self;
 						          initialize;
-						          contents: nil;
+						          emptyContents;
 						          yourself ].
 			square name: squareNotation.
 			grid at: squareNotation put: square.
@@ -219,8 +219,8 @@ MyChessBoard >> initializeSquares [
 
 { #category : 'accessing' }
 MyChessBoard >> pieces [
-	
-	^ children collect: [ :square | square contents ]
+
+	^ self squareContents select: [ :p | p isPiece ]
 ]
 
 { #category : 'accessing' }
@@ -235,10 +235,17 @@ MyChessBoard >> selected: aMyChessSquare [
 	selected := aMyChessSquare
 ]
 
+{ #category : 'accessing' }
+MyChessBoard >> squareContents [
+
+	"The content of each square, including the empty ones"
+	^ children collect: [ :square | square contents ]
+]
+
 { #category : 'highlighting' }
 MyChessBoard >> unhighLightTargets: squares [
 
-	squares do: [ :sq | sq ifNotNil: #unhighlightTarget ]
+	squares do: [ :sq | sq unhighlightTarget ]
 ]
 
 { #category : 'selection' }

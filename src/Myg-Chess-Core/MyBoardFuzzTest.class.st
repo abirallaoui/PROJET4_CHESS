@@ -10,7 +10,7 @@ MyBoardFuzzTest >> place: aPiece on: aBoard [
 
 	| name |
 	[ name := 'abcdefgh' atRandom asString , (1 to: 8) atRandom asString.
-	(aBoard at: name ifAbsent: [ nil ]) hasPiece ] whileTrue.
+	(aBoard at: name) hasPiece ] whileTrue.
 	aBoard at: name put: aPiece
 ]
 
@@ -65,9 +65,7 @@ MyBoardFuzzTest >> testBoardFromRandomFENHasExpectedNumberOfPieces [
 		expected := (placement select: [ :c | c isLetter ]) size.
 		board := MyChessBoard fromFENBoard:
 			         (MyFENParser parse: placement , ' w KQkq - 0 1') board.
-		self
-			assert: (board pieces select: [ :p | p notNil ]) size
-			equals: expected ]
+		self assert: board pieces size equals: expected ]
 ]
 
 { #category : 'as yet unclassified' }
@@ -76,9 +74,9 @@ MyBoardFuzzTest >> testComputingLegalMovesDoesNotChangeTheBoard [
 	20 timesRepeat: [
 		| board before |
 		board := self randomBoard.
-		before := board pieces copy.
-		board pieces do: [ :p | p ifNotNil: [ p legalTargetSquares ] ].
-		self assert: board pieces equals: before ]
+		before := board squareContents.
+		board pieces do: [ :p | p legalTargetSquares ].
+		self assert: board squareContents equals: before ]
 ]
 
 { #category : 'as yet unclassified' }
@@ -87,8 +85,7 @@ MyBoardFuzzTest >> testLegalMoveNeverLeavesOwnKingInCheck [
 	20 timesRepeat: [
 		| board movable piece king |
 		board := self randomBoard.
-		movable := board pieces select: [ :p |
-			           p notNil and: [ p legalTargetSquares notEmpty ] ].
+		movable := board pieces select: [ :p | p legalTargetSquares notEmpty ].
 		movable ifNotEmpty: [
 			piece := movable atRandom.
 			piece moveTo: piece legalTargetSquares atRandom.
@@ -103,10 +100,9 @@ MyBoardFuzzTest >> testLegalMovesNeverTargetOwnPieces [
 		| board |
 		board := self randomBoard.
 		board pieces do: [ :p |
-			p ifNotNil: [
-				p legalTargetSquares do: [ :s |
-					self assert: s notNil.
-					self assert: (s hasPiece and: [ s contents color = p color ]) not ] ] ] ]
+			p legalTargetSquares do: [ :s |
+				self assert: s isOnBoard.
+				self assert: (s hasPiece and: [ s contents color = p color ]) not ] ] ]
 ]
 
 { #category : 'as yet unclassified' }

@@ -47,7 +47,7 @@ MyPiece >> collectSquares: aBlock [
 MyPiece >> collectSquares: aBlock legal: shouldBeLegal [
 
 	^ self collectSquares: aBlock while: [ :aSquare |
-		  aSquare notNil and: [ shouldBeLegal ==> aSquare hasPiece not ] ]
+		  aSquare isOnBoard and: [ shouldBeLegal ==> aSquare hasPiece not ] ]
 ]
 
 { #category : 'rendering' }
@@ -62,7 +62,8 @@ MyPiece >> collectSquares: collectBlock while: untilBlock [
 		whileTrue: [ targets add: next ].
 
 	"If we can it the next piece, then add it too"
-	(next notNil and: [ next contents color ~= color ]) ifTrue: [ targets add: next ].
+	(next isOnBoard and: [ next contents color ~= color ]) ifTrue: [
+		targets add: next ].
 
 	^ targets
 ]
@@ -100,9 +101,7 @@ MyPiece >> downLeftDiagonal [
 { #category : 'rendering' }
 MyPiece >> downLeftDiagonalLegal: aBoolean [
 
-	^ self
-		  collectSquares: [ :aSquare | aSquare down ifNotNil: #left ]
-		  legal: aBoolean
+	^ self collectSquares: [ :aSquare | aSquare down left ] legal: aBoolean
 ]
 
 { #category : 'rendering' }
@@ -114,9 +113,7 @@ MyPiece >> downRightDiagonal [
 { #category : 'rendering' }
 MyPiece >> downRightDiagonalLegal: aBoolean [
 
-	^ self
-		  collectSquares: [ :aSquare | aSquare down ifNotNil: #right ]
-		  legal: aBoolean
+	^ self collectSquares: [ :aSquare | aSquare down right ] legal: aBoolean
 ]
 
 { #category : 'accessing' }
@@ -162,6 +159,12 @@ MyPiece >> legalTargetSquares [
 		  self wouldLeaveMyKingSafeIfMovingTo: aSquare ]
 ]
 
+{ #category : 'rendering' }
+MyPiece >> moveIn: aGame to: aSquare [
+
+	aGame move: self to: aSquare
+]
+
 { #category : 'path commands' }
 MyPiece >> moveTo: aSquare [
 
@@ -176,8 +179,8 @@ MyPiece >> moveTo: aSquare [
 MyPiece >> myKing [
 
 	^ self board pieces
-		  detect: [ :p | p notNil and: [ p isKing and: [ p color = color ] ] ]
-		  ifNone: [ nil ]
+		  detect: [ :p | p isKing and: [ p color = color ] ]
+		  ifNone: [ MyNoKing new ]
 ]
 
 { #category : 'as yet unclassified' }
@@ -242,7 +245,7 @@ MyPiece >> upLeftDiagonal [
 { #category : 'rendering' }
 MyPiece >> upLeftDiagonalLegal: aBoolean [
 
-	^ self collectSquares: [ :aSquare | aSquare up ifNotNil: #left ] legal: aBoolean
+	^ self collectSquares: [ :aSquare | aSquare up left ] legal: aBoolean
 ]
 
 { #category : 'rendering' }
@@ -254,24 +257,21 @@ MyPiece >> upRightDiagonal [
 { #category : 'rendering' }
 MyPiece >> upRightDiagonalLegal: aBoolean [
 
-	^ self
-		  collectSquares: [ :aSquare | aSquare up ifNotNil: #right ]
-		  legal: aBoolean
+	^ self collectSquares: [ :aSquare | aSquare up right ] legal: aBoolean
 ]
 
 { #category : 'as yet unclassified' }
 MyPiece >> wouldLeaveMyKingSafeIfMovingTo: aSquare [
 
-	| originalSquare capturedPiece kingSafe king |
+	| originalSquare capturedPiece kingSafe |
 	originalSquare := square.
 	capturedPiece := aSquare contents.
 
-	originalSquare contents: nil.
+	originalSquare emptyContents.
 	aSquare contents: self.
 	square := aSquare.
 
-	king := self myKing.
-	kingSafe := king isNil or: [ king isInCheck not ].
+	kingSafe := self myKing isInCheck not.
 
 	square := originalSquare.
 	originalSquare contents: self.

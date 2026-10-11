@@ -18,7 +18,7 @@ MyPieceTest >> testPieceCanCaptureAttackerToSaveKing [
 	board at: 'e5' put: blackRook.
 	board at: 'd4' put: whiteBishop.
 
-	self assert: (whiteBishop legalTargetSquares includes: (board at: 'e5' ifAbsent: [ nil ]))
+	self assert: (whiteBishop legalTargetSquares includes: (board at: 'e5' ))
 ]
 
 { #category : 'tests' }

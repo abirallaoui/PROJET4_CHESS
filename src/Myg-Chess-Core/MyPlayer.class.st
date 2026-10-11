@@ -40,6 +40,13 @@ MyPlayer >> game: anObject [
 	game := anObject
 ]
 
+{ #category : 'initialization' }
+MyPlayer >> initialize [
+
+	super initialize.
+	strategy := MyRandomStrategy new
+]
+
 { #category : 'testing' }
 MyPlayer >> isWhite [
 	
@@ -55,7 +62,7 @@ MyPlayer >> king [
 { #category : 'accessing' }
 MyPlayer >> pieces [
 
-	^ game pieces select: [ :p | p notNil and: [ p color = self color ] ]
+	^ game pieces select: [ :p | p color = self color ]
 ]
 
 { #category : 'playing' }
@@ -70,7 +77,7 @@ MyPlayer >> play [
 { #category : 'accessing' }
 MyPlayer >> strategy [
 
-	^ strategy ifNil: [ strategy := MyRandomStrategy new ]
+	^ strategy
 ]
 
 { #category : 'accessing' }

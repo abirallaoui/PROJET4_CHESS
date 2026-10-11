@@ -8,8 +8,7 @@ Class {
 { #category : 'as yet unclassified' }
 MyBotTest >> signatureOf: aGame [
 
-	^ aGame pieces collect: [ :p |
-		  p ifNil: [ '-' ] ifNotNil: [ p id , p square name ] ]
+	^ aGame pieces collect: [ :p | p id , p square name ]
 ]
 
 { #category : 'as yet unclassified' }
@@ -37,10 +36,10 @@ MyBotTest >> testGreedyAgainstRandomPlaysSeveralMoves [
 	game := MyChessGame freshGame.
 	game whitePlayer strategy: MyGreedyStrategy new.
 	game blackPlayer strategy: MyRandomStrategy new.
-	count := (game pieces select: [ :p | p notNil ]) size.
+	count := game pieces size.
 	10 timesRepeat: [
 		game play.
-		self assert: (game pieces select: [ :p | p notNil ]) size <= count ]
+		self assert: game pieces size <= count ]
 ]
 
 { #category : 'tests' }
@@ -68,9 +67,9 @@ MyBotTest >> testPlayChangesExactlyTwoSquares [
 
 	| game before after changed |
 	game := MyChessGame freshGame.
-	before := game pieces copy.
+	before := game board squareContents.
 	game play.
-	after := game pieces.
+	after := game board squareContents.
 	changed := (1 to: before size) count: [ :i |
 		           (before at: i) ~~ (after at: i) ].
 	self assert: changed equals: 2
@@ -81,10 +80,10 @@ MyBotTest >> testPlayingSeveralMovesNeverCreatesPieces [
 
 	| game count |
 	game := MyChessGame freshGame.
-	count := (game pieces select: [ :p | p notNil ]) size.
+	count := game pieces size.
 	10 timesRepeat: [
 		game play.
-		self assert: (game pieces select: [ :p | p notNil ]) size <= count ]
+		self assert: game pieces size <= count ]
 ]
 
 { #category : 'tests' }
