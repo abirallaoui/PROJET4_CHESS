@@ -11,6 +11,12 @@ MyPawn >> id [
 	^ 'P'
 ]
 
+{ #category : 'as yet unclassified' }
+MyPawn >> pointValue [
+
+	^ 1
+]
+
 { #category : 'rendering' }
 MyPawn >> renderPieceOn: aSquare [ 
 	

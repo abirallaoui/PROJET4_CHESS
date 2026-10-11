@@ -11,6 +11,12 @@ MyBishop >> id [
 	^ 'B'
 ]
 
+{ #category : 'as yet unclassified' }
+MyBishop >> pointValue [
+
+	^ 3
+]
+
 { #category : 'rendering' }
 MyBishop >> renderPieceOn: aSquare [
 

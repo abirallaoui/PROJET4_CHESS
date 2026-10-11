@@ -10,6 +10,12 @@ MyRook >> id [
 	^ 'R'
 ]
 
+{ #category : 'as yet unclassified' }
+MyRook >> pointValue [
+
+	^ 5
+]
+
 { #category : 'rendering' }
 MyRook >> renderPieceOn: aSquare [
 

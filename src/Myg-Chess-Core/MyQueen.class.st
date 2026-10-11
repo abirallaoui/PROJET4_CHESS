@@ -5,6 +5,12 @@ Class {
 	#package : 'Myg-Chess-Core'
 }
 
+{ #category : 'as yet unclassified' }
+MyQueen >> pointValue [
+
+	^ 9
+]
+
 { #category : 'rendering' }
 MyQueen >> renderPieceOn: aSquare [
 

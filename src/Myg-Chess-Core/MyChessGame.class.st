@@ -50,6 +50,12 @@ MyChessGame class >> new [
 ]
 
 { #category : 'accessing' }
+MyChessGame >> blackPlayer [
+
+	^ blackPlayer
+]
+
+{ #category : 'accessing' }
 MyChessGame >> board [
 
 	^ board
@@ -179,4 +185,10 @@ MyChessGame >> recordMovementOf: aPiece to: aSquare [
 	].
 	
 	movesLabel text: movesText
+]
+
+{ #category : 'accessing' }
+MyChessGame >> whitePlayer [
+
+	^ whitePlayer
 ]

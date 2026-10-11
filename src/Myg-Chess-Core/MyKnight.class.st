@@ -11,6 +11,12 @@ MyKnight >> id [
 	^ 'N'
 ]
 
+{ #category : 'as yet unclassified' }
+MyKnight >> pointValue [
+
+	^ 3
+]
+
 { #category : 'rendering' }
 MyKnight >> renderPieceOn: aSquare [
 

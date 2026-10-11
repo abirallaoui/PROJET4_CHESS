@@ -180,6 +180,12 @@ MyPiece >> myKing [
 		  ifNone: [ nil ]
 ]
 
+{ #category : 'as yet unclassified' }
+MyPiece >> pointValue [
+
+	^ 0
+]
+
 { #category : 'rendering' }
 MyPiece >> rightFile [
 
